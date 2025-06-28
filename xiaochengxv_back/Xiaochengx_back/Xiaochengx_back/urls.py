@@ -29,5 +29,9 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('send_code/', views.send_verification_code, name='send_code'),
     path('register/', views.register, name='register'),
-    path('update-profile/', update_profile, name='update_profile'),
+    # path('update-profile/', update_profile, name='update_profile'),
+    path('api/update-profile/', views.update_profile),
+    path('api/update-avatar/', views.update_avatar, name='update_avatar'),
+    path('api/update-nickname/', views.update_nickname, name='update_nickname'),
+    path('api/get-user-info/', views.get_user_info, name='get_user_info'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

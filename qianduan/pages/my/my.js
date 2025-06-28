@@ -30,11 +30,11 @@ Page({
 
         // 上传头像至后端
         wx.uploadFile({
-          url: 'https://your-backend-url/api/update-profile/',  // 后端更新用户资料的接口
+          url: 'http://127.0.0.1:8000/api/update-profile/',  // 后端更新用户资料的接口
           filePath: avatar,
-          name: 'avatar',
+          name: 'avatar',  // 文件字段名称必须与后端一致
           header: {
-            'Authorization': `Bearer ${wx.getStorageSync('token')}` // 如果需要 Token 验证
+            'Authorization': `Bearer ${wx.getStorageSync('token')}`  // 如果需要 Token 验证
           },
           success: (res) => {
             const data = JSON.parse(res.data);
@@ -43,7 +43,18 @@ Page({
                 userInfo: data.user
               });
               wx.setStorageSync('userInfo', data.user);
+            } else {
+              wx.showToast({
+                title: '头像上传失败',
+                icon: 'none'
+              });
             }
+          },
+          fail: (err) => {
+            wx.showToast({
+              title: '请求失败',
+              icon: 'none'
+            });
           }
         });
       }
@@ -63,11 +74,11 @@ Page({
 
           // 发送修改昵称的请求到后端
           wx.request({
-            url: 'https://your-backend-url/api/update-profile/',  // 后端更新用户资料的接口
+            url: 'http://127.0.0.1:8000/api/update-profile/',  // 后端更新用户资料的接口
             method: 'POST',
             data: { nickname: res.content },
             header: {
-              'Authorization': `Bearer ${wx.getStorageSync('token')}`
+              'Authorization': `Bearer ${wx.getStorageSync('token')}`  // 如果需要 Token 验证
             },
             success: (response) => {
               if (response.data.status === 'success') {
@@ -87,6 +98,12 @@ Page({
                   duration: 2000
                 });
               }
+            },
+            fail: (error) => {
+              wx.showToast({
+                title: '请求失败',
+                icon: 'none'
+              });
             }
           });
         }
