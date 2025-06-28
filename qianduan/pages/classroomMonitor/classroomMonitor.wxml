@@ -1,0 +1,7 @@
+<!--pages/classroomMonitor/classroomMonitor.wxml-->
+<text>pages/classroomMonitor/classroomMonitor.wxml</text>
+<view>---发送网络请求----</view>
+<view>用户名：{{user.name}}</view>
+<view>爱好：{{user.hobby}}</view>
+<view>年龄：{{user.age}}</view>
+<button type="primary" bindtap="handleLoadUser">加载用户信息</button>

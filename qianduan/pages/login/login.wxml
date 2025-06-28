@@ -1,0 +1,61 @@
+<!--pages/login/login.wxml-->
+<view class="login-container">
+  <view class="logo-container">
+    <image 
+      src="/images/助手.png" 
+      class="logo" 
+      mode="aspectFit" 
+      lazy-load="true"
+    ></image>
+    <text class="app-title">教学助手</text>
+  </view>
+  
+  <view class="form-container">
+    <view class="input-group {{usernameFocus ? 'focus' : ''}}">
+      <icon type="person" size="20" class="input-icon"></icon>
+      <input 
+        class="login-input" 
+        placeholder="请输入用户名" 
+        bindinput="inputUsername"
+        value="{{username}}"
+        focus="{{usernameFocus}}"
+        confirm-type="next"
+        bindconfirm="onUsernameConfirm"
+        bindfocus="onUsernameFocus"
+        bindblur="onUsernameBlur"
+      />
+      <view wx:if="{{username}}" class="input-clear" bindtap="clearUsername">×</view>
+    </view>
+    
+    <view class="input-group {{passwordFocus ? 'focus' : ''}}">
+      <icon type="lock" size="20" class="input-icon"></icon>
+      <input 
+        class="login-input" 
+        placeholder="请输入密码" 
+        type="password" 
+        bindinput="inputPassword"
+        value="{{password}}"
+        focus="{{passwordFocus}}"
+        confirm-type="done"
+        bindconfirm="login"
+        bindfocus="onPasswordFocus"
+        bindblur="onPasswordBlur"
+      />
+      <view wx:if="{{password}}" class="input-clear" bindtap="clearPassword">×</view>
+    </view>
+    
+    <button 
+      class="login-button" 
+      bindtap="login"
+      hover-class="button-hover"
+      disabled="{{!username || !password}}"
+    >
+      登录
+    </button>
+    
+    <view class="extra-links">
+      <navigator url="/pages/register/register" class="link">注册账号</navigator>
+      <navigator url="/pages/forgot-password/forgot-password" class="link">忘记密码</navigator>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,74 @@
+<!--pages/my/my.wxml-->
+<view class="container">
+  <view class="header">
+    <view class="header-content">
+      <view class="avatar-container">
+        <image 
+          class="avatar" 
+          src="{{userInfo ? userInfo.avatarUrl : '/images/my.png'}}" 
+          mode="aspectFill"
+          bindtap="changeAvatar"
+        ></image>
+      </view>
+      <view class="user-info">
+        <text class="nickname">
+          {{userInfo ? userInfo.nickName : '未登录'}}
+        </text>
+        <text class="user-desc">
+          {{userInfo ? '欢迎回来' : '点击登录查看更多'}}
+        </text>
+      </view>
+      <view wx:if="!userInfo" class="login-btn" bindtap="goLogin">
+        <text>登录</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="menu-section">
+    <view class="menu-title">功能菜单</view>
+    <view class="menu-grid">
+      <view class="menu-item" bindtap="onMenuTap" data-menu="announcement">
+        <image src="/images/menu/公告.png" class="menu-icon"></image>
+        <text>公告</text>
+      </view>
+      <view class="menu-item" bindtap="onMenuTap" data-menu="message">
+        <image src="/images/menu/消息.png" class="menu-icon"></image>
+        <text>消息</text>
+      </view>
+      <view class="menu-item" bindtap="onMenuTap" data-menu="class-register">
+        <image src="/images/menu/班级登记.png" class="menu-icon"></image>
+        <text>班级登记</text>
+      </view>
+      <view class="menu-item" bindtap="onMenuTap" data-menu="evaluation">
+        <image src="/images/menu/评价.png" class="menu-icon"></image>
+        <text>评价</text>
+      </view>
+      <view class="menu-item" bindtap="onMenuTap" data-menu="leave">
+        <image src="/images/menu/请假.png" class="menu-icon"></image>
+        <text>请假</text>
+      </view>
+      <view class="menu-item" bindtap="onMenuTap" data-menu="attendance">
+        <image src="/images/menu/课堂考勤.png" class="menu-icon"></image>
+        <text>课堂考勤</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="action-section">
+    <view class="action-item" bindtap="editNickname">
+      <text>修改昵称</text>
+      <text class="iconfont icon-right"></text>
+    </view>
+    <view class="action-item" bindtap="onSettingTap">
+      <text>设置</text>
+      <text class="iconfont icon-right"></text>
+    </view>
+    <view class="action-item" bindtap="onAboutTap">
+      <text>关于我们</text>
+      <text class="iconfont icon-right"></text>
+    </view>
+    <view wx:if="{{userInfo}}" class="logout-btn" bindtap="logout">
+      退出登录
+    </view>
+  </view>
+</view>

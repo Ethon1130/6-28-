@@ -1,0 +1,56 @@
+
+<!-- =============== -->
+
+<!-- 1轮播图:滑动展示图片页面 -->
+<view class = "banner">
+  <swiper   
+style="height: 200px;"
+autoplay="true"
+indicator-dots
+indicator-active-color = "pink"
+>
+<swiper-item style="height: 100%;">
+    <image src="/images/banners/banner1.png" mode="aspectFill" style="width: 100%; height: 100%;" />
+  </swiper-item>
+  <swiper-item style="height: 100%;">
+    <image src="/images/banners/banner2.png" mode="aspectFill" style="width: 100%; height: 100%;" />
+  </swiper-item>
+  <swiper-item style="height: 100%;">
+    <image src="/images/banners/banner3.png" mode="aspectFill" style="width: 100%; height: 100%;" />
+  </swiper-item>
+</swiper>   
+</view>
+
+<view class = "tips">
+<text class = "iconfont icon-tishi icon"></text>
+<text>欢迎使用智能监控系统</text>
+</view>
+
+<view class = "menu">
+<view class = "item">
+<image src="/images/menu/公告.png" class = "img" />
+<text class = "title">公告</text>
+</view>
+<view class = "item">
+<image src="/images/menu/班级登记.png" class = "img" />
+<text class = "title">班级登记</text>
+</view>
+<view class = "item">
+<image src="/images/menu/课堂考勤.png" class = "img" />
+<text class = "title">课堂考勤</text>
+</view>
+<view class = "item">
+<image src="/images/menu/评价.png" class = "img" />
+<text class = "title">评价</text>
+</view>
+<view class = "item">
+<image src="/images/menu/请假.png" class = "img" />
+<text class = "title">请假</text>
+</view>
+<view class = "item">
+<image src="/images/menu/消息.png" class = "img" />
+<text class = "title">消息</text>
+</view>
+
+
+</view>

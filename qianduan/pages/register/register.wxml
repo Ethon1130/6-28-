@@ -1,0 +1,93 @@
+<view class="container">
+  <view class="register-form">
+    <view class="form-title">用户注册</view>
+    
+    <view class="input-group">
+      <view class="input-label">手机号</view>
+      <view class="input-wrapper">
+        <input 
+          type="number" 
+          placeholder="请输入手机号" 
+          value="{{phone}}"
+          bindinput="inputPhone"
+          maxlength="11"
+          class="input-field {{phoneFocus ? 'focus' : ''}}"
+          bindconfirm="onPhoneConfirm"
+          bindblur="onPhoneBlur"
+          bindfocus="onPhoneFocus"
+        />
+        <view wx:if="{{phone}}" class="clear-btn" bindtap="clearPhone">
+          <text class="iconfont icon-clear"></text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="input-group">
+      <view class="input-label">验证码</view>
+      <view class="input-wrapper">
+        <input 
+          type="number" 
+          placeholder="请输入验证码" 
+          value="{{code}}"
+          bindinput="inputCode"
+          maxlength="6"
+          class="input-field {{codeFocus ? 'focus' : ''}}"
+          bindconfirm="onCodeConfirm"
+          bindblur="onCodeBlur"
+          bindfocus="onCodeFocus"
+        />
+        <view class="send-code-btn" bindtap="sendVerificationCode">
+          <text>{{countdownText}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="input-group">
+      <view class="input-label">密码</view>
+      <view class="input-wrapper">
+        <input 
+          type="password" 
+          placeholder="请设置密码" 
+          value="{{password}}"
+          bindinput="inputPassword"
+          class="input-field {{passwordFocus ? 'focus' : ''}}"
+          bindconfirm="onPasswordConfirm"
+          bindblur="onPasswordBlur"
+          bindfocus="onPasswordFocus"
+        />
+        <view wx:if="{{password}}" class="clear-btn" bindtap="clearPassword">
+          <text class="iconfont icon-clear"></text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="input-group">
+      <view class="input-label">昵称</view>
+      <view class="input-wrapper">
+        <input 
+          type="text" 
+          placeholder="请输入昵称（可选）" 
+          value="{{nickname}}"
+          bindinput="inputNickname"
+          class="input-field {{nicknameFocus ? 'focus' : ''}}"
+          bindblur="onNicknameBlur"
+          bindfocus="onNicknameFocus"
+        />
+        <view wx:if="{{nickname}}" class="clear-btn" bindtap="clearNickname">
+          <text class="iconfont icon-clear"></text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="register-btn" bindtap="register">
+      <text>注册</text>
+    </view>
+    
+    <view class="login-link">
+      <text>已有账号？</text>
+      <navigator url="/pages/login/login" hover-class="navigator-hover">
+        立即登录
+      </navigator>
+    </view>
+  </view>
+</view> 
