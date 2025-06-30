@@ -5,7 +5,7 @@
       <view class="avatar-container">
         <image 
           class="avatar" 
-          src="{{userInfo ? userInfo.avatarUrl : '/images/avatar1.png'}}" 
+          src="{{userInfo ? userInfo.avatarUrl + '?t=' + Date.now() : '/images/avatar1.png'}}" 
           mode="aspectFill"
           bindtap="changeAvatar"
         ></image>

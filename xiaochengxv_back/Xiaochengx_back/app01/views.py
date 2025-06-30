@@ -216,7 +216,7 @@ def update_profile(request):
             'user': {
                 'username': user.username,
                 'nickname': user.nickname,
-                'avatar_url': user.avatar.url if user.avatar else None,
+                'avatar_url': request.build_absolute_uri(user.avatar.url) if user.avatar else None,
             }
         })
     except Exception as e:
@@ -252,7 +252,7 @@ def update_avatar(request):
             'code': 200,
             'message': '头像更新成功',
             'data': {
-                'avatar_url': request.build_absolute_uri(user.avatar.url)
+                'avatar_url': request.build_absolute_uri(user.avatar.url) if user.avatar else None,
             }
         })
     except Exception as e:

@@ -10,9 +10,14 @@ Page({
     // 获取用户信息，假设从缓存或其他地方获取
     const userInfo = wx.getStorageSync('userInfo');
     if (userInfo && userInfo.isLoggedIn) {
+      // 如果没有 nickName 字段，默认用 username 作为初始昵称
+      const nickName = userInfo.nickName || userInfo.nickname || userInfo.username;
       this.setData({
-        userInfo: userInfo,
-        nickname: userInfo.nickName,
+        userInfo: {
+          ...userInfo,
+          nickName: nickName
+        },
+        nickname: nickName,
         avatar: userInfo.avatarUrl
       });
     }
@@ -34,7 +39,7 @@ Page({
           filePath: avatar,
           name: 'avatar',  // 文件字段名称必须与后端一致
           formData: {
-            username: this.data.userInfo.nickName  // 添加 username 参数
+            username: this.data.userInfo.username  // 只用 username 作为唯一标识
           },
           success: (res) => {
             const data = JSON.parse(res.data);
@@ -46,7 +51,10 @@ Page({
 
               // 更新页面显示
               this.setData({
-                'userInfo.avatarUrl': data.user.avatar_url
+                userInfo: {
+                  ...this.data.userInfo,
+                  avatarUrl: data.user.avatar_url
+                }
               });
 
               wx.showToast({
@@ -82,8 +90,6 @@ Page({
       success: (res) => {
         if (res.confirm && res.content) {
           const newNickname = res.content;
-          this.setData({ nickname: newNickname });
-
           // 发送修改昵称的请求到后端
           wx.request({
             url: 'http://127.0.0.1:8000/api/update-profile/',
@@ -92,7 +98,7 @@ Page({
               'content-type': 'application/x-www-form-urlencoded'
             },
             data: {
-              username: this.data.userInfo.nickName,  // 添加 username 参数
+              username: this.data.userInfo.username,  // 只用 username 作为唯一标识
               nickname: newNickname
             },
             success: (res) => {
@@ -104,7 +110,11 @@ Page({
 
                 // 更新页面显示
                 this.setData({
-                  'userInfo.nickName': res.data.user.nickname
+                  userInfo: {
+                    ...this.data.userInfo,
+                    nickName: res.data.user.nickname
+                  },
+                  nickname: res.data.user.nickname
                 });
 
                 wx.showToast({
