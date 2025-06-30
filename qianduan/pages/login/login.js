@@ -103,7 +103,7 @@ Page({
         if (res.data.status === 'success') {
           wx.setStorageSync('userInfo', {
             nickName: res.data.user.username,
-            avatarUrl: '/images/my.png',
+            avatarUrl: '/images/avatar1.png',
             isLoggedIn: true
           });
           wx.switchTab({

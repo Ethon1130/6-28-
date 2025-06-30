@@ -40,10 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app01.apps.App01Config',
-
+    'corsheaders',  # 添加 CORS 支持
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # 添加 CORS 中间件，必须放在最前面
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -142,3 +143,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 
 # 确保 media 目录存在
 os.makedirs(MEDIA_ROOT, exist_ok=True)
+
+# CORS 配置
+CORS_ALLOW_ALL_ORIGINS = True  # 允许所有域名跨域访问，仅用于开发环境
+CORS_ALLOW_CREDENTIALS = True  # 允许携带 Cookie

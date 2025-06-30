@@ -33,19 +33,29 @@ Page({
           url: 'http://127.0.0.1:8000/api/update-profile/',  // 后端更新用户资料的接口
           filePath: avatar,
           name: 'avatar',  // 文件字段名称必须与后端一致
-          header: {
-            'Authorization': `Bearer ${wx.getStorageSync('token')}`  // 如果需要 Token 验证
+          formData: {
+            username: this.data.userInfo.nickName  // 添加 username 参数
           },
           success: (res) => {
             const data = JSON.parse(res.data);
             if (data.status === 'success') {
+              // 更新本地存储的用户信息
+              const userInfo = wx.getStorageSync('userInfo');
+              userInfo.avatarUrl = data.user.avatar_url;
+              wx.setStorageSync('userInfo', userInfo);
+
+              // 更新页面显示
               this.setData({
-                userInfo: data.user
+                'userInfo.avatarUrl': data.user.avatar_url
               });
-              wx.setStorageSync('userInfo', data.user);
+
+              wx.showToast({
+                title: '头像更新成功',
+                icon: 'success'
+              });
             } else {
               wx.showToast({
-                title: '头像上传失败',
+                title: data.message || '头像上传失败',
                 icon: 'none'
               });
             }
@@ -55,6 +65,7 @@ Page({
               title: '请求失败',
               icon: 'none'
             });
+            console.error('上传头像失败:', err);
           }
         });
       }
@@ -70,30 +81,40 @@ Page({
       placeholderText: '请输入新昵称',
       success: (res) => {
         if (res.confirm && res.content) {
-          this.setData({ nickname: res.content });
+          const newNickname = res.content;
+          this.setData({ nickname: newNickname });
 
           // 发送修改昵称的请求到后端
           wx.request({
-            url: 'http://127.0.0.1:8000/api/update-profile/',  // 后端更新用户资料的接口
+            url: 'http://127.0.0.1:8000/api/update-profile/',
             method: 'POST',
-            data: { nickname: res.content },
             header: {
-              'Authorization': `Bearer ${wx.getStorageSync('token')}`  // 如果需要 Token 验证
+              'content-type': 'application/x-www-form-urlencoded'
             },
-            success: (response) => {
-              if (response.data.status === 'success') {
+            data: {
+              username: this.data.userInfo.nickName,  // 添加 username 参数
+              nickname: newNickname
+            },
+            success: (res) => {
+              if (res.data.status === 'success') {
+                // 更新本地存储的用户信息
+                const userInfo = wx.getStorageSync('userInfo');
+                userInfo.nickName = res.data.user.nickname;
+                wx.setStorageSync('userInfo', userInfo);
+
+                // 更新页面显示
                 this.setData({
-                  userInfo: response.data.user
+                  'userInfo.nickName': res.data.user.nickname
                 });
-                wx.setStorageSync('userInfo', response.data.user);
+
                 wx.showToast({
-                  title: '修改成功',
+                  title: '昵称修改成功',
                   icon: 'success',
                   duration: 2000
                 });
               } else {
                 wx.showToast({
-                  title: '修改失败',
+                  title: res.data.message || '修改失败',
                   icon: 'none',
                   duration: 2000
                 });
@@ -104,6 +125,7 @@ Page({
                 title: '请求失败',
                 icon: 'none'
               });
+              console.error('修改昵称失败:', error);
             }
           });
         }

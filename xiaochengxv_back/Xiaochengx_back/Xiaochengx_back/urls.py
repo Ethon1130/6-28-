@@ -35,3 +35,7 @@ urlpatterns = [
     path('api/update-nickname/', views.update_nickname, name='update_nickname'),
     path('api/get-user-info/', views.get_user_info, name='get_user_info'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# 添加媒体文件的访问路径
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

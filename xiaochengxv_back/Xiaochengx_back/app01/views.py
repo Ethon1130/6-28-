@@ -4,12 +4,12 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
-from .models import User, UserProfile
+from .models import User
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth.decorators import login_required
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 import json
@@ -17,6 +17,7 @@ import random
 import re
 import os
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -178,63 +179,80 @@ def user_logout(request):
     return JsonResponse({'status': 'success', 'message': '注销成功'})
 
 
-@api_view(['POST'])
-@login_required
+@csrf_exempt
 def update_profile(request):
-    """更新头像和昵称"""
-    user = request.user
-    if request.method == 'POST':
-        avatar = request.FILES.get('avatar', None)
-        nickname = request.data.get('nickname', None)
+    """
+    一个简化的更新用户昵称和头像的接口，仅用于测试。
+    需要通过 POST 请求传递 'username' 来指定要更新的用户。
+    """
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': '仅支持POST请求'}, status=405)
 
-        # 更新头像
-        if avatar:
-            user.avatar = avatar
+    try:
+        username = request.POST.get('username')
+        if not username:
+            return JsonResponse({'status': 'error', 'message': '必须提供username参数'}, status=400)
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': '用户不存在'}, status=404)
 
         # 更新昵称
-        if nickname:
+        nickname = request.POST.get('nickname')
+        if nickname is not None:
             user.nickname = nickname
 
-        user.save()  # 保存用户信息
+        # 更新头像
+        avatar_file = request.FILES.get('avatar')
+        if avatar_file:
+            user.avatar = avatar_file
 
-        return Response({
+        user.save()
+
+        return JsonResponse({
             'status': 'success',
-            'message': '个人资料更新成功',
+            'message': '用户信息更新成功',
             'user': {
                 'username': user.username,
                 'nickname': user.nickname,
-                'avatar': user.avatar.url if user.avatar else None
+                'avatar_url': user.avatar.url if user.avatar else None,
             }
-        }, status=status.HTTP_200_OK)
+        })
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
 @csrf_exempt
 @require_http_methods(["POST"])
 def update_avatar(request):
     try:
-        openid = request.POST.get('openid')
+        username = request.POST.get('username')
         avatar_file = request.FILES.get('avatar')
 
-        if not openid or not avatar_file:
+        if not username or not avatar_file:
             return JsonResponse({'code': 400, 'message': '参数缺失'})
 
         # 获取用户信息
-        user_profile, created = UserProfile.objects.get_or_create(openid=openid)
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return JsonResponse({'code': 404, 'message': '用户不存在'})
 
-        # 删除旧头像
-        if user_profile.avatar:
-            old_avatar_path = os.path.join(settings.MEDIA_ROOT, str(user_profile.avatar))
+        # 删除旧头像（如果不是默认头像）
+        if user.avatar and 'default.png' not in str(user.avatar):
+            old_avatar_path = os.path.join(settings.MEDIA_ROOT, str(user.avatar))
             if os.path.exists(old_avatar_path):
                 os.remove(old_avatar_path)
 
         # 保存新头像
-        user_profile.avatar = avatar_file
-        user_profile.save()
+        user.avatar = avatar_file
+        user.save()
 
         return JsonResponse({
             'code': 200,
             'message': '头像更新成功',
             'data': {
-                'avatar_url': request.build_absolute_uri(user_profile.avatar.url)
+                'avatar_url': request.build_absolute_uri(user.avatar.url)
             }
         })
     except Exception as e:
@@ -245,16 +263,20 @@ def update_avatar(request):
 def update_nickname(request):
     try:
         data = json.loads(request.body)
-        openid = data.get('openid')
+        username = data.get('username')
         nickname = data.get('nickname')
 
-        if not openid or not nickname:
+        if not username or not nickname:
             return JsonResponse({'code': 400, 'message': '参数缺失'})
 
         # 获取用户信息
-        user_profile, created = UserProfile.objects.get_or_create(openid=openid)
-        user_profile.nickname = nickname
-        user_profile.save()
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return JsonResponse({'code': 404, 'message': '用户不存在'})
+            
+        user.nickname = nickname
+        user.save()
 
         return JsonResponse({
             'code': 200,
@@ -269,19 +291,23 @@ def update_nickname(request):
 @require_http_methods(["GET"])
 def get_user_info(request):
     try:
-        openid = request.GET.get('openid')
-        if not openid:
+        username = request.GET.get('username')
+        if not username:
             return JsonResponse({'code': 400, 'message': '参数缺失'})
 
-        user_profile = UserProfile.objects.get(openid=openid)
-        avatar_url = request.build_absolute_uri(user_profile.avatar.url) if user_profile.avatar else ''
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return JsonResponse({'code': 404, 'message': '用户不存在'})
+            
+        avatar_url = request.build_absolute_uri(user.avatar.url) if user.avatar else ''
 
         return JsonResponse({
             'code': 200,
             'data': {
-                'nickname': user_profile.nickname,
+                'nickname': user.nickname,
                 'avatar_url': avatar_url
             }
         })
-    except UserProfile.DoesNotExist:
-        return JsonResponse({'code': 404, 'message': '用户不存在'})
+    except Exception as e:
+        return JsonResponse({'code': 500, 'message': str(e)})
