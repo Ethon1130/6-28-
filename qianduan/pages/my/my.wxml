@@ -18,7 +18,7 @@
           {{userInfo ? '欢迎回来' : '点击登录查看更多'}}
         </text>
       </view>
-      <view wx:if="!userInfo" class="login-btn" bindtap="goLogin">
+      <view wx:if="{{!userInfo}}" class="login-btn" bindtap="goLogin">
         <text>登录</text>
       </view>
     </view>

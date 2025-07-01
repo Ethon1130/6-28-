@@ -1,7 +1,51 @@
-<!--pages/classroomMonitor/classroomMonitor.wxml-->
-<text>pages/classroomMonitor/classroomMonitor.wxml</text>
-<view>---发送网络请求----</view>
-<view>用户名：{{user.name}}</view>
-<view>爱好：{{user.hobby}}</view>
-<view>年龄：{{user.age}}</view>
-<button type="primary" bindtap="handleLoadUser">加载用户信息</button>
+<view class="app-container">
+  <!-- 顶部标题栏 - 简约设计 -->
+  <!-- <view class="header">
+    <text class="header-title">校园助手</text>
+  </view> -->
+
+  <!-- 监控区 - 简约设计 -->
+  <view class="monitor-area">
+    <!-- 监控窗口 - 纯白背景 简洁线条 -->
+    <view class="monitor-window">
+      <image 
+        src="{{isPlaying ? currentFrame : pauseFrame}}" 
+        class="monitor-feed" 
+        mode="aspectFill" 
+        wx:if="{{currentFrame}}"
+      />
+      
+      <!-- 默认状态提示 -->
+      <view class="monitor-state" wx:if="{{!currentFrame}}">
+        准备连接监控...
+      </view>
+      
+      <!-- 极简播放控制 -->
+      <view class="playback-control" bindtap="togglePlayback">
+        <image 
+          src="{{isPlaying ? '/images/pause.png' : '/images/play.png'}}" 
+          class="control-icon" 
+          wx:if="{{currentFrame}}"
+        />
+      </view>
+
+      <!-- 监控状态指示 -->
+      <view class="status-indicator {{isConnected ? 'active' : ''}}">
+        <view class="indicator-dot"></view>
+        <text class="status-text">{{isConnected ? '监控中' : '未连接'}}</text>
+      </view>
+    </view>
+
+    <!-- 控制按钮组 - 现代简约设计 -->
+    <view class="control-group">
+      <button class="control-btn primary" bindtap="toggleConnection">
+        <image class="btn-icon" src="/images/monitor/{{isConnected ? 'stop.png' : 'start.png'}}"></image>
+        <text class="btn-text">{{isConnected ? '停止监控' : '开始监控'}}</text>
+      </button>
+      <button class="control-btn secondary" bindtap="viewHistory">
+        <image class="btn-icon" src="/images/monitor/history.png"></image>
+        <text class="btn-text">查看历史记录</text>
+      </button>
+    </view>
+  </view>
+</view>

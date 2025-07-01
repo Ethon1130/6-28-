@@ -1,1 +1,177 @@
-/* pages/classroomMonitor/classroomMonitor.wxss */
+/* 整体简约设计 */
+.app-container {
+  height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+}
+
+/* 标题栏 - 极简 */
+.header {
+  padding: 20rpx;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: center;
+}
+
+
+/* 监控区域 - 大留白设计 */
+.monitor-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx;
+}
+
+/* 监控窗口 - 纯白背景 */
+.monitor-window {
+  width: 99%;
+  height: 50vh;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+/* 视频流 */
+.monitor-feed {
+  width: 100%;
+  height: 100%;
+}
+
+/* 默认状态提示 */
+.monitor-state {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #999;
+  font-size: 28rpx;
+  transform: translateY(-50%);
+}
+
+/* 播放控制 - 极简设计 */
+.playback-control {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.monitor-window:active .playback-control {
+  opacity: 1;
+}
+
+.control-icon {
+  width: 80rpx;
+  height: 80rpx;
+}
+
+/* 控制按钮组 - 现代简约设计 */
+.control-group {
+  width: 90%;
+  margin-top: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.control-btn {
+  flex: 1;
+  height: 80rpx;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.control-btn.primary {
+  background: #4A90E2;
+  color: white;
+}
+
+.control-btn.secondary {
+  background: #4A90E2;
+  color: white;
+}
+
+.control-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 按钮图标样式 */
+.btn-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 10rpx;
+}
+
+.btn-text {
+  font-size: 28rpx;
+  line-height: 1;
+}
+
+/* 状态指示器 */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+.indicator-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #cccccc;
+  margin-right: 10rpx;
+  transition: background 0.3s;
+}
+
+.status-indicator.active .indicator-dot {
+  background: #4CD964;
+  box-shadow: 0 0 10rpx rgba(76, 217, 100, 0.5);
+  animation: pulse 2s infinite;
+}
+
+.status-text {
+  font-size: 24rpx;
+  color: #ffffff;
+}
+
+/* 闪烁动画 */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(76, 217, 100, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10rpx rgba(76, 217, 100, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(76, 217, 100, 0);
+  }
+}
