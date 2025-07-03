@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -73,7 +74,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Xiaochengx_back.wsgi.application'
-
+ASGI_APPLICATION = 'Xiaochengx_back.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -147,3 +148,10 @@ os.makedirs(MEDIA_ROOT, exist_ok=True)
 # CORS 配置
 CORS_ALLOW_ALL_ORIGINS = True  # 允许所有域名跨域访问，仅用于开发环境
 CORS_ALLOW_CREDENTIALS = True  # 允许携带 Cookie
+
+# Channels 配置
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}

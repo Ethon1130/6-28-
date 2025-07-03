@@ -1,177 +1,508 @@
-/* 整体简约设计 */
+/* 整体容器 */
 .app-container {
   height: 100vh;
-  background: #ffffff;
+  background: linear-gradient(135deg, #667eea 0%, #4ea24b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  padding: 40rpx;
+  box-sizing: border-box;
+}
+
+/* 监控容器 */
+.monitor-container {
+  width: 100%;
+  max-width: 800rpx;
   display: flex;
   flex-direction: column;
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  gap: 40rpx;
 }
 
-/* 标题栏 - 极简 */
-.header {
-  padding: 20rpx;
-  border-bottom: 1px solid #f0f0f0;
-  text-align: center;
+/* 立体播放框 */
+.video-player {
+  position: relative;
+  width: 100%;
+  border-radius: 24rpx;
+  overflow: hidden;
 }
 
+/* 播放器主体 */
+.player-main {
+  background: #1a1a1a;
+  border-radius: 24rpx;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 
+    0 20rpx 40rpx rgba(0, 0, 0, 0.3),
+    0 8rpx 16rpx rgba(0, 0, 0, 0.2),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.1);
+}
 
-/* 监控区域 - 大留白设计 */
-.monitor-area {
-  flex: 1;
+/* 视频画面 */
+.video-screen {
+  width: 100%;
+  height: 400rpx;
+  position: relative;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-feed {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 默认状态 */
+.video-placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20rpx;
-}
-
-/* 监控窗口 - 纯白背景 */
-.monitor-window {
-  width: 99%;
-  height: 50vh;
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
-  position: relative;
-  overflow: hidden;
-  border-radius: 16rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
-}
-
-/* 视频流 */
-.monitor-feed {
-  width: 100%;
-  height: 100%;
-}
-
-/* 默认状态提示 */
-.monitor-state {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
+  justify-content: center;
+  color: #666;
   text-align: center;
-  color: #999;
-  font-size: 28rpx;
-  transform: translateY(-50%);
 }
 
-/* 播放控制 - 极简设计 */
-.playback-control {
+.placeholder-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.6;
+}
+
+.placeholder-text {
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-bottom: 10rpx;
+  color: #999;
+}
+
+.placeholder-sub {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 播放控制覆盖层 */
+.playback-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s ease;
 }
 
-.monitor-window:active .playback-control {
+.video-screen:active .playback-overlay {
   opacity: 1;
 }
 
-.control-icon {
-  width: 80rpx;
-  height: 80rpx;
-}
-
-/* 控制按钮组 - 现代简约设计 */
-.control-group {
-  width: 90%;
-  margin-top: 30rpx;
-  display: flex;
-  justify-content: space-between;
-  gap: 20rpx;
-}
-
-.control-btn {
-  flex: 1;
-  height: 80rpx;
-  margin: 0;
-  padding: 0;
+.play-button {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12rpx;
-  font-size: 28rpx;
-  font-weight: 500;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
-  border: none;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
 }
 
-.control-btn.primary {
-  background: #4A90E2;
-  color: white;
+.play-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.3);
 }
 
-.control-btn.secondary {
-  background: #4A90E2;
-  color: white;
+.play-icon {
+  font-size: 48rpx;
+  color: #333;
 }
 
-.control-btn:active {
-  transform: translateY(2rpx);
-  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
-}
-
-/* 按钮图标样式 */
-.btn-icon {
-  width: 32rpx;
-  height: 32rpx;
-  margin-right: 10rpx;
-}
-
-.btn-text {
-  font-size: 28rpx;
-  line-height: 1;
-}
-
-/* 状态指示器 */
-.status-indicator {
-  display: flex;
-  align-items: center;
+/* 状态信息覆盖层 */
+.status-overlay {
   position: absolute;
   top: 20rpx;
-  right: 20rpx;
-  padding: 8rpx 16rpx;
-  border-radius: 8rpx;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 10;
+  left: 20rpx;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 12rpx;
+  padding: 16rpx;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
 }
 
-.indicator-dot {
+.status-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.status-label {
+  font-size: 22rpx;
+  color: #ccc;
+  min-width: 60rpx;
+}
+
+.status-value {
+  font-size: 22rpx;
+  font-weight: 500;
+  color: #fff;
+}
+
+.status-value.success {
+  color: #4CD964;
+}
+
+.status-value.warning {
+  color: #FF9500;
+}
+
+/* 错误信息覆盖层 */
+.error-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 59, 48, 0.9);
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+  max-width: 80%;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.error-icon {
+  font-size: 32rpx;
+}
+
+.error-text {
+  font-size: 26rpx;
+  color: #fff;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* 播放器控制栏 */
+.player-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10rpx);
+}
+
+.control-left, .control-right {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.control-center {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+/* 状态徽章 */
+.status-badge {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.status-badge.active {
+  background: rgba(76, 217, 100, 0.2);
+  border-color: rgba(76, 217, 100, 0.4);
+}
+
+.status-dot {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: #999;
+  margin-right: 8rpx;
+  transition: all 0.3s ease;
+}
+
+.status-badge.active .status-dot {
+  background: #4CD964;
+  box-shadow: 0 0 8rpx rgba(76, 217, 100, 0.6);
+  animation: pulse 2s infinite;
+}
+
+.status-badge text {
+  font-size: 22rpx;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* 时间显示 */
+.time-display {
+  font-size: 24rpx;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.fps-display {
+  font-size: 20rpx;
+  color: #4CD964;
+  font-weight: 500;
+}
+
+/* 迷你控制按钮 */
+.control-btn-mini {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.control-btn-mini:active {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(0.95);
+}
+
+.control-btn-mini text {
+  font-size: 24rpx;
+  color: #fff;
+}
+
+/* 播放器阴影 */
+.player-shadow {
+  position: absolute;
+  bottom: -20rpx;
+  left: 20rpx;
+  right: 20rpx;
+  height: 20rpx;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  filter: blur(10rpx);
+  z-index: -1;
+}
+
+/* 控制面板 */
+.control-panel {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 
+    0 16rpx 32rpx rgba(0, 0, 0, 0.1),
+    0 4rpx 8rpx rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(20rpx);
+}
+
+.panel-header {
+  margin-bottom: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.status-indicator {
   width: 12rpx;
   height: 12rpx;
   border-radius: 50%;
-  background: #cccccc;
-  margin-right: 10rpx;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
 }
 
-.status-indicator.active .indicator-dot {
+.status-indicator.connected {
   background: #4CD964;
-  box-shadow: 0 0 10rpx rgba(76, 217, 100, 0.5);
+  box-shadow: 0 0 8rpx rgba(76, 217, 100, 0.6);
   animation: pulse 2s infinite;
+}
+
+.status-indicator.disconnected {
+  background: #FF3B30;
 }
 
 .status-text {
   font-size: 24rpx;
-  color: #ffffff;
+  color: #666;
+  font-weight: 500;
 }
 
-/* 闪烁动画 */
+.panel-buttons {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.panel-btn {
+  flex: 1;
+  height: 100rpx;
+  border-radius: 16rpx;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.panel-btn:active::before {
+  left: 100%;
+}
+
+.panel-btn.primary {
+  background: linear-gradient(135deg, #667eea 0%, #2b8b50 100%);
+  color: white;
+  box-shadow: 0 8rpx 16rpx rgba(102, 126, 234, 0.3);
+}
+
+.panel-btn.primary.active {
+  background: linear-gradient(135deg, #cfa1a1 0%, #214377 100%);
+  box-shadow: 0 8rpx 16rpx rgba(255, 107, 107, 0.3);
+}
+
+.panel-btn.secondary {
+  background: #f8f9fa;
+  color: #333;
+  border: 1rpx solid #e9ecef;
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.panel-btn:active {
+  transform: translateY(2rpx);
+}
+
+.btn-icon {
+  font-size: 32rpx;
+  line-height: 1;
+}
+
+.btn-label {
+  font-size: 24rpx;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* 设备信息 */
+.device-info {
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  border: 1rpx solid #e9ecef;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8rpx 0;
+}
+
+.info-item:not(:last-child) {
+  border-bottom: 1rpx solid #e9ecef;
+}
+
+.info-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.info-value {
+  font-size: 24rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 动画效果 */
 @keyframes pulse {
   0% {
     box-shadow: 0 0 0 0 rgba(76, 217, 100, 0.7);
   }
   70% {
-    box-shadow: 0 0 0 10rpx rgba(76, 217, 100, 0);
+    box-shadow: 0 0 0 8rpx rgba(76, 217, 100, 0);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(76, 217, 100, 0);
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .app-container {
+    padding: 20rpx;
+  }
+  
+  .video-screen {
+    height: 300rpx;
+  }
+  
+  .panel-btn {
+    height: 80rpx;
+  }
+  
+  .btn-icon {
+    font-size: 28rpx;
+  }
+  
+  .btn-label {
+    font-size: 22rpx;
+  }
+  
+  .status-overlay {
+    top: 10rpx;
+    left: 10rpx;
+    padding: 12rpx;
+  }
+  
+  .status-label, .status-value {
+    font-size: 20rpx;
   }
 }

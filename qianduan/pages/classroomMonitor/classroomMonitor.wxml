@@ -1,51 +1,132 @@
 <view class="app-container">
-  <!-- 顶部标题栏 - 简约设计 -->
-  <!-- <view class="header">
-    <text class="header-title">校园助手</text>
-  </view> -->
-
-  <!-- 监控区 - 简约设计 -->
-  <view class="monitor-area">
-    <!-- 监控窗口 - 纯白背景 简洁线条 -->
-    <view class="monitor-window">
-      <image 
-        src="{{isPlaying ? currentFrame : pauseFrame}}" 
-        class="monitor-feed" 
-        mode="aspectFill" 
-        wx:if="{{currentFrame}}"
-      />
-      
-      <!-- 默认状态提示 -->
-      <view class="monitor-state" wx:if="{{!currentFrame}}">
-        准备连接监控...
+  <!-- 监控播放界面 -->
+  <view class="monitor-container">
+    <!-- 立体播放框 -->
+    <view class="video-player">
+      <!-- 播放器主体 -->
+      <view class="player-main">
+        <!-- 视频画面 -->
+        <view class="video-screen">
+          <image 
+            src="{{currentFrame}}" 
+            class="video-feed" 
+            mode="aspectFill" 
+            wx:if="{{currentFrame}}"
+          />
+          
+          <!-- 默认状态 -->
+          <view class="video-placeholder" wx:if="{{!currentFrame}}">
+            <view class="placeholder-icon">📹</view>
+            <text class="placeholder-text">升腾设备监控</text>
+            <text class="placeholder-sub">点击开始连接升腾设备</text>
+          </view>
+          
+          <!-- 播放控制覆盖层 -->
+          <view class="playback-overlay" bindtap="togglePlayback" wx:if="{{isConnected}}">
+            <view class="play-button {{isPlaying ? 'paused' : 'playing'}}">
+              <text class="play-icon">{{isPlaying ? '⏸' : '▶'}}</text>
+            </view>
+          </view>
+          
+          <!-- 状态信息覆盖层 -->
+          <view class="status-overlay" wx:if="{{isConnected}}">
+            <view class="status-info">
+              <view class="status-item">
+                <text class="status-label">状态:</text>
+                <text class="status-value {{connectionStatus === '流传输中' ? 'success' : 'warning'}}">{{connectionStatus}}</text>
+              </view>
+              <view class="status-item" wx:if="{{fps > 0}}">
+                <text class="status-label">FPS:</text>
+                <text class="status-value">{{fps}}</text>
+              </view>
+              <view class="status-item">
+                <text class="status-label">帧数:</text>
+                <text class="status-value">{{frameIndex}}</text>
+              </view>
+            </view>
+          </view>
+          
+          <!-- 错误信息显示 -->
+          <view class="error-overlay" wx:if="{{errorMessage}}">
+            <view class="error-message">
+              <text class="error-icon">⚠️</text>
+              <text class="error-text">{{errorMessage}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 播放器控制栏 -->
+        <view class="player-controls" wx:if="{{isConnected}}">
+          <view class="control-left">
+            <view class="status-badge {{isConnected ? 'active' : ''}}">
+              <view class="status-dot"></view>
+              <text>{{isConnected ? 'LIVE' : 'OFFLINE'}}</text>
+            </view>
+          </view>
+          
+          <view class="control-center">
+            <text class="time-display">帧 {{frameIndex}}</text>
+            <text class="fps-display" wx:if="{{fps > 0}}">{{fps}} FPS</text>
+          </view>
+          
+          <view class="control-right">
+            <view class="control-btn-mini" bindtap="togglePlayback">
+              <text>{{isPlaying ? '⏸' : '▶'}}</text>
+            </view>
+            <view class="control-btn-mini" bindtap="requestSingleFrame">
+              <text>📷</text>
+            </view>
+          </view>
+        </view>
       </view>
       
-      <!-- 极简播放控制 -->
-      <view class="playback-control" bindtap="togglePlayback">
-        <image 
-          src="{{isPlaying ? '/images/pause.png' : '/images/play.png'}}" 
-          class="control-icon" 
-          wx:if="{{currentFrame}}"
-        />
-      </view>
-
-      <!-- 监控状态指示 -->
-      <view class="status-indicator {{isConnected ? 'active' : ''}}">
-        <view class="indicator-dot"></view>
-        <text class="status-text">{{isConnected ? '监控中' : '未连接'}}</text>
-      </view>
+      <!-- 播放器阴影效果 -->
+      <view class="player-shadow"></view>
     </view>
 
-    <!-- 控制按钮组 - 现代简约设计 -->
-    <view class="control-group">
-      <button class="control-btn primary" bindtap="toggleConnection">
-        <image class="btn-icon" src="/images/monitor/{{isConnected ? 'stop.png' : 'start.png'}}"></image>
-        <text class="btn-text">{{isConnected ? '停止监控' : '开始监控'}}</text>
-      </button>
-      <button class="control-btn secondary" bindtap="viewHistory">
-        <image class="btn-icon" src="/images/monitor/history.png"></image>
-        <text class="btn-text">查看历史记录</text>
-      </button>
+    <!-- 控制面板 -->
+    <view class="control-panel">
+      <view class="panel-header">
+        <text class="panel-title">升腾设备控制</text>
+        <view class="connection-status">
+          <view class="status-indicator {{isConnected ? 'connected' : 'disconnected'}}"></view>
+          <text class="status-text">{{connectionStatus}}</text>
+        </view>
+      </view>
+      
+      <view class="panel-buttons">
+        <button class="panel-btn primary {{isConnected ? 'active' : ''}}" bindtap="toggleConnection">
+          <text class="btn-icon">{{isConnected ? '⏹' : '▶'}}</text>
+          <text class="btn-label">{{isConnected ? '断开' : '连接'}}</text>
+        </button>
+        
+        <button class="panel-btn secondary" bindtap="requestSingleFrame" wx:if="{{isConnected}}">
+          <text class="btn-icon">📷</text>
+          <text class="btn-label">单帧</text>
+        </button>
+        
+        <button class="panel-btn secondary" bindtap="configureAscendDevice" wx:if="{{isConnected}}">
+          <text class="btn-icon">⚙️</text>
+          <text class="btn-label">配置</text>
+        </button>
+        
+        <button class="panel-btn secondary" bindtap="viewHistory">
+          <text class="btn-icon">📋</text>
+          <text class="btn-label">历史</text>
+        </button>
+      </view>
+      
+      <!-- 设备信息 -->
+      <view class="device-info" wx:if="{{isConnected}}">
+        <view class="info-item">
+          <text class="info-label">设备类型:</text>
+          <text class="info-value">升腾设备</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">连接时间:</text>
+          <text class="info-value">{{frameIndex > 0 ? '实时' : '待机'}}</text>
+        </view>
+      </view>
     </view>
   </view>
 </view>
