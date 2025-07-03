@@ -17,8 +17,8 @@
           <!-- 默认状态 -->
           <view class="video-placeholder" wx:if="{{!currentFrame}}">
             <view class="placeholder-icon">📹</view>
-            <text class="placeholder-text">升腾设备监控</text>
-            <text class="placeholder-sub">点击开始连接升腾设备</text>
+            <text class="placeholder-text">设备监控</text>
+            <text class="placeholder-sub">点击开始连接设备</text>
           </view>
           
           <!-- 播放控制覆盖层 -->
@@ -87,7 +87,7 @@
     <!-- 控制面板 -->
     <view class="control-panel">
       <view class="panel-header">
-        <text class="panel-title">升腾设备控制</text>
+        <text class="panel-title"></text>
         <view class="connection-status">
           <view class="status-indicator {{isConnected ? 'connected' : 'disconnected'}}"></view>
           <text class="status-text">{{connectionStatus}}</text>

@@ -3,6 +3,8 @@
 WebSocket 连接测试脚本
 用于测试升腾设备监控的WebSocket功能
 """
+# 如果需要推流和图片帧，确保设备（192.168.1.100:8082）已开机并网络可达。
+
 
 import asyncio
 import websockets
@@ -11,7 +13,7 @@ import time
 
 async def test_websocket():
     """测试WebSocket连接和消息处理"""
-    uri = "ws://localhost:8000/ws/ascend/"
+    uri = "ws://localhost:8002/ws/ascend/"
     
     try:
         print("正在连接WebSocket...")
@@ -110,13 +112,11 @@ async def test_websocket():
             
             print("\n所有测试完成!")
             
-    except websockets.exceptions.ConnectionRefused:
-        print("错误: 无法连接到WebSocket服务器")
-        print("请确保Django服务器正在运行: python manage.py runserver")
     except Exception as e:
         print(f"错误: {e}")
 
 if __name__ == "__main__":
     print("WebSocket 连接测试")
     print("=" * 50)
-    asyncio.run(test_websocket()) 
+    asyncio.run(test_websocket())
+
